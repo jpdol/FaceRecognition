@@ -3,7 +3,7 @@ import numpy as np
 import os 
 
 recognizer = cv2.face.LBPHFaceRecognizer_create()
-recognizer.read('trainer/trainer.yml')
+recognizer.read('face_recognizer_model/model.yml')
 cascadePath = "haarcascade_frontalface_default.xml"
 faceCascade = cv2.CascadeClassifier(cascadePath);
 
@@ -61,7 +61,6 @@ while True:
     if k == 27:
         break
 
-# Do a bit of cleanup
-print("\n [INFO] Exiting Program and cleanup stuff")
+
 cam.release()
 cv2.destroyAllWindows()
