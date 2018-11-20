@@ -34,8 +34,8 @@ def getImagesAndLabels(path):
 faces,ids = getImagesAndLabels(path)
 recognizer.train(faces, np.array(ids))
 
-# Save the model into trainer/trainer.yml
-recognizer.write('trainer/trainer.yml')
+# Save the model
+recognizer.write('face_recognizer_model/model.yml')
 
 # Print the numer of faces trained and end program
 print("\n{0} faces trained.\n".format(len(np.unique(ids))))
