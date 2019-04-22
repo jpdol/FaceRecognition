@@ -8,7 +8,7 @@ classifier = load_model('classifier.h5')
 id = 0
 
 # names related to ids: example ==> Marcelo: id=1,  etc
-names = ['Jean', 'Raimundo'] 
+names = ['Jean', 'Lorena', 'Diego', 'Hermann', 'Professora'] 
 test_datagen = ImageDataGenerator(rescale=1./255)
 import cv2
 import os
