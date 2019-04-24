@@ -33,7 +33,7 @@ def l2_normalize(x, axis=-1, epsilon=1e-10):
 
 def load_and_align_images(filepaths, margin):
     cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
-    
+    image_size = 160
     aligned_images = []
     for filepath in filepaths:
         img = imread(filepath, cv2.IMREAD_GRAYSCALE)

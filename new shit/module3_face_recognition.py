@@ -1,8 +1,9 @@
 from keras.models import load_model
 from keras.preprocessing.image import ImageDataGenerator
 import lib
+import joblib
 
-classifier = load_model('classifier.h5')
+classifier = joblib.load('classifier.sav')
 facenet = load_model('facenet_keras.h5')
 
 #iniciate id counter
@@ -36,11 +37,11 @@ while(True):
 	b = np.dstack((img, img))
         img = np.dstack((img, b))      
         aligned = resize(img, (image_size, image_size), mode='reflect')
-	aux = lib.prewhiten([aligned])
-	emb = facenet.predict(aux)
-	emb = l2_normalize(np.concatenate([emb]))
+	aux = prewhiten(np.array(aligned))
+	emb = facenet.predict(np.reshape(aux, (1, aux.shape[0], aux.shape[1], aux.shape[2])))
+	emb = lib.l2_normalize(np.concatenate(np.array(emb)))
 	
-        y_pred = classifier.kneighbors(emb)[0]
+        y_pred = classifier.kneighbors(emb.reshape(1, -1))[0]
 
         for i in range(len(y_pred)):
             for j in range(len(y_pred[i])):
