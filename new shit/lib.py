@@ -10,6 +10,9 @@ from skimage.transform import resize
 from scipy.spatial import distance
 from keras.models import load_model
 import os
+from PIL import ImageFile
+ImageFile.LOAD_TRUNCATED_IMAGES = True
+
 
 def prewhiten(x):
     if x.ndim == 4:
@@ -39,11 +42,11 @@ def load_and_align_images(filepaths, margin):
         img = imread(filepath, cv2.IMREAD_GRAYSCALE)
         b = np.dstack((img, img))
         img = np.dstack((img, b))      
-        aligned = resize(img, (image_size, image_size), mode='reflect')
+        aligned = resize(img, (image_size, image_size), mode = 'reflect')
         aligned_images.append(aligned)
             
     return np.array(aligned_images)
-def calc_embs(filepaths, margin=10, batch_size=1):
+def calc_embs(filepaths, model, margin=10, batch_size=1):
     aligned_images = prewhiten(load_and_align_images(filepaths, margin))
     pd = []
     for start in range(0, len(aligned_images), batch_size):

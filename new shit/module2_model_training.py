@@ -29,9 +29,9 @@ model = load_model(model_path)
 # Carregando dataset
 
 #the real deal
-cascade_path = r'D:\Github\FaceRecognition\new shit\haarcascade_frontalface_default.xml'
+cascade_path = 'haarcascade_frontalface_default.xml'
 names = []
-for n in range(1,num_classes):
+for n in range(1,num_classes+1):
     names.append(str(n))
 image_size = 160
 
@@ -46,7 +46,7 @@ for i in range(1, len(os.listdir(image_dir_basepath))):
 for name in names:
     image_dirpath = os.path.join(image_dir_basepath, name)
     image_filepaths = [os.path.join(image_dirpath, f) for f in os.listdir(image_dirpath)]
-    X_train.append(lib.calc_embs(image_filepaths))
+    X_train.append(lib.calc_embs(image_filepaths, model))
 
 #teste
 image_dir_basepath = 'dataset-test'
@@ -59,13 +59,13 @@ for i in range(1, len(os.listdir(image_dir_basepath))):
 for name in names:
     image_dirpath = os.path.join(image_dir_basepath, name)
     image_filepaths = [os.path.join(image_dirpath, f) for f in os.listdir(image_dirpath)]
-    X_test.append(lib.calc_embs(image_filepaths))
+    X_test.append(lib.calc_embs(image_filepaths, model))
 
 #prep data
 X_train = np.array(X_train)
-X_train = np.reshape(X_train, (X_train.shape[0]* (X_train.shape[1],128)))
+X_train = np.reshape(X_train, (X_train.shape[0]* X_train.shape[1],128))
 X_test = np.array(X_test)
-X_test = np.reshape(X_test, (X_test.shape[0]* (X_test.shape[1],128)))
+X_test = np.reshape(X_test, (X_test.shape[0]* X_test.shape[1],128))
 
 from sklearn.preprocessing import StandardScaler  
 scaler = StandardScaler()  
