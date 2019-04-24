@@ -34,12 +34,12 @@ while(True):
         cv2.rectangle(img, (x,y), (x+w,y+h), (255,0,0), 2)     
         # Save the captured image into the datasets folder
         img = gray[y:y+h,x:x+w]
-	b = np.dstack((img, img))
+        b = np.dstack((img, img))
         img = np.dstack((img, b))      
         aligned = resize(img, (image_size, image_size), mode='reflect')
-	aux = prewhiten(np.array(aligned))
-	emb = facenet.predict(np.reshape(aux, (1, aux.shape[0], aux.shape[1], aux.shape[2])))
-	emb = lib.l2_normalize(np.concatenate(np.array(emb)))
+        aux = prewhiten(np.array(aligned))
+        emb = facenet.predict(np.reshape(aux, (1, aux.shape[0], aux.shape[1], aux.shape[2])))
+        emb = lib.l2_normalize(np.concatenate(np.array(emb)))
 	
         y_pred = classifier.kneighbors(emb.reshape(1, -1))[0]
 
