@@ -33,7 +33,10 @@ while(True):
         cv2.rectangle(img, (x,y), (x+w,y+h), (255,0,0), 2)     
         # Save the captured image into the datasets folder
         img = gray[y:y+h,x:x+w]
-	aux = lib.prewhiten(img)
+	b = np.dstack((img, img))
+        img = np.dstack((img, b))      
+        aligned = resize(img, (image_size, image_size), mode='reflect')
+	aux = lib.prewhiten([aligned])
 	emb = facenet.predict(aux)
 	emb = l2_normalize(np.concatenate([emb]))
 	
