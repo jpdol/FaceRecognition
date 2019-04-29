@@ -10,7 +10,7 @@ from model import create_model
 import lib
 
 def image_to_embedding(image, model):
-    #image = cv2.resize(image, (96, 96), interpolation=cv2.INTER_AREA) 
+    #image = cv2.resize(image, (96, 96), interpolation=cv2.INTER_AREA)
     image = cv2.resize(image, (96, 96)) 
     img = image[...,::-1]
     img = np.around(np.transpose(img, (0,1,2))/255.0, decimals=12)
@@ -32,7 +32,7 @@ def recognize_face(face_image, input_embeddings, model):
             distances.append(np.linalg.norm(embedding-input_embedding))
         
         euclidean_distance = np.amin(distances)
-        print('Euclidean distance from %s is %s' %(input_name, euclidean_distance))
+        #print('Euclidean distance from %s is %s' %(input_name, euclidean_distance))
 
         
         if euclidean_distance < minimum_distance:
@@ -60,34 +60,37 @@ def create_input_image_embeddings(model):
 def recognize_faces_in_cam(input_embeddings, model):
     
 
-    cv2.namedWindow("Face Recognizer")
+    #cv2.namedWindow("Face Recognizer")
     vc = cv2.VideoCapture(0)
    
 
-    font = cv2.FONT_HERSHEY_SIMPLEX
-    face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
+    #font = cv2.FONT_HERSHEY_SIMPLEX
+    #face_cascade = cv2.CascadeClassifier('haarcascade_frontalface_default.xml')
     
     
     while vc.isOpened():
         _, frame = vc.read()
         img = frame
-        height, width, channels = frame.shape
-
         face_image = lib.align_image(img)
-        #face_image = frame[max(0, y1):min(height, y2), max(0, x1):min(width, x2)]    
-        identity = recognize_face(face_image, input_embeddings, model)
-            
+        if face_image is not None:
+            #face_image = frame[max(0, y1):min(height, y2), max(0, x1):min(width, x2)]   
+            identity = recognize_face(face_image, input_embeddings, model)
             
 
-        if identity is not None:
-            #img = cv2.rectangle(frame,(x1, y1),(x2, y2),(255,255,255),2)
-            cv2.putText(img, str(identity), (4,30), font, 1, (255,255,255), 2)
-    
-        key = cv2.waitKey(100)
-        cv2.imshow("Face Recognizer", img)
+            if identity is not None:
+                #img = cv2.rectangle(frame,(x1, y1),(x2, y2),(255,255,255),2)
+                #cv2.putText(img, str(identity), (4,30), font, 1, (255,255,255), 2)
+                print(str(identity))
+            else:
+                print("Não reconhecido")
+        
+            key = cv2.waitKey(100)
+            #cv2.imshow("Face Recognizer", img)
 
-        if key == 27: # exit on ESC
-            break
+            if key == 27: # exit on ESC
+                break
+        else:
+            print("Nenhuma face detectada!")
     vc.release()
     cv2.destroyAllWindows()
 
