@@ -3,6 +3,10 @@ from keras_face.library.face_net import FaceNet
 import pickle
 import cv2
 import os
+from imutils.face_utils import FaceAligner
+from imutils.face_utils import rect_to_bb
+import imutils
+import dlib
 
 def load_obj(name ):
     with open(name + '.pkl', 'rb') as f:
@@ -23,6 +27,10 @@ fnet.load_model(model_dir_path)
 
 database = load_obj('database')
 
+ace_detector = dlib.get_frontal_face_detector()
+predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
+fa = FaceAligner(predictor, desiredFaceWidth=96)
+
 cam = cv2.VideoCapture(0)
 cam.set(3, 640) # set video width
 cam.set(4, 480) # set video height
@@ -33,16 +41,13 @@ check_dir = "./check/1.jpg"
 while(True):
 
     ret, img = cam.read()
-    img = cv2.flip(img, 1) # flip video image vertically
+    img = imutils.resize(img, width=96)
     gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    faces = face_detector.detectMultiScale(gray, 1.3, 5)
+    faces = face_detector(gray, 2)
 
-    for (x,y,w,h) in faces:
+    for face in faces:
 
-        cv2.rectangle(img, (x,y), (x+w,y+h), (255,0,0), 2)     
-        # Save the captured image into the datasets folder
-        img = gray[y:y+h,x:x+w]
-        img = cv2.resize(gray[y:y+h,x:x+w], (96, 96))
+        img = fa.align(img, gray, face)
         cv2.imwrite(check_dir, img)
         dist, identity = fnet.who_is_it(check_dir, database)
         if identity is None:
