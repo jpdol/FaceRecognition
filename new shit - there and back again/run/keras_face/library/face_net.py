@@ -50,6 +50,7 @@ def triplet_loss_test():
 
 class FaceNet(object):
     def __init__(self):
+        print(2)
         self.model = None
 
     def load_model(self, model_dir_path):

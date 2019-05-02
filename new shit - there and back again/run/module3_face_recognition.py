@@ -44,7 +44,6 @@ except:
 while(True):
 
     _, img = cam.read()
-    print("putz")
     if img is not None:
         img = imutils.resize(img, width=96)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
