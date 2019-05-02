@@ -7,8 +7,6 @@ from imutils.face_utils import FaceAligner
 from imutils.face_utils import rect_to_bb
 import imutils
 import dlib
-import time
-
 def load_obj(name ):
     with open(name + '.pkl', 'rb') as f:
         return pickle.load(f)
@@ -17,7 +15,6 @@ def load_obj(name ):
 id = 0
 
 # names related to ids: example ==> Marcelo: id=1,  etc
-start = time.time()
 model_dir_path = './models/fnet_w.h5'
 image_dir_path = "./images"
 
@@ -44,11 +41,10 @@ try:
 except:
     pass
 
-end = time.time()
-print(end-start)
 while(True):
 
-    ret, img = cam.read()
+    _, img = cam.read()
+    print("putz")
     if img is not None:
         img = imutils.resize(img, width=96)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
