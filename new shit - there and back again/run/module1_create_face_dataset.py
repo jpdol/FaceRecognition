@@ -18,7 +18,7 @@ def load_obj(name ):
     with open(name + '.pkl', 'rb') as f:
         return pickle.load(f)
 
-cam = cv2.VideoCapture(0)
+cam = cv2.VideoCapture(1)
 cam.set(3, 640) # set video width
 cam.set(4, 480) # set video height
 
@@ -43,11 +43,16 @@ else:
 face_detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
 fa = FaceAligner(predictor, desiredFaceWidth=96)
+
 end = time.time()
 print(end - start)
+try:
+    os.mkdir(image_dir_path)
+except:
+    pass
 # For each person, enter one numeric face id
 face_id = str(input("Nome da pessoa a ser cadastrada: "))
-newdir = os.path.join("Images/", face_id)
+newdir = os.path.join(image_dir_path, face_id)
 
 try:
     os.mkdir(newdir)
@@ -62,6 +67,7 @@ count = 0
 while(count<4):
 
     ret, img = cam.read()
+    cv2.imshow('image', img)
     if img is not None:
         img = imutils.resize(img, width=96)
         gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
@@ -72,7 +78,7 @@ while(count<4):
                 #faceOrig = imutils.resize(img[y:y + h, x:x + w], width=96)
                 img = fa.align(img, gray, face)   
                 # Save the captured image into the datasets folder
-                cv2.imshow('image', img)
+                cv2.imshow('face image', img)
                 ok = int(input("Confirme se a imagem está ok!"))
                 if ok:
                     count += 1

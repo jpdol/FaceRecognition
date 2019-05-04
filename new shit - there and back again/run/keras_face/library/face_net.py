@@ -1,10 +1,10 @@
 from keras import backend as K
-
+import sys
 K.set_image_data_format('channels_first')
 from keras_face.library.fr_utils import *
 from keras_face.library.inception_blocks_v2 import *
 
-np.set_printoptions(threshold=np.nan)
+np.set_printoptions(threshold=sys.maxsize)
 
 
 def triplet_loss(y_true, y_pred, alpha=0.2):
@@ -50,7 +50,6 @@ def triplet_loss_test():
 
 class FaceNet(object):
     def __init__(self):
-        print(2)
         self.model = None
 
     def load_model(self, model_dir_path):
@@ -126,17 +125,15 @@ class FaceNet(object):
         # Loop over the database dictionary's names and encodings.
         for (name, db_enc) in database.items():
 
-            for emb in db_enc:
-                # Compute L2 distance between the target "encoding" and the current "emb" from the database. (≈ 1 line)
-                dist = np.linalg.norm(emb - encoding)
+            # Compute L2 distance between the target "encoding" and the current "emb" from the database. (≈ 1 line)
+            dist = np.linalg.norm(db_enc - encoding)
 
-                # If this distance is less than the min_dist, then set min_dist to dist, and identity to name. (≈ 3 lines)
-                if dist < min_dist:
-                    min_dist = dist
-                    identity = name
+            # If this distance is less than the min_dist, then set min_dist to dist, and identity to name. (≈ 3 lines)
+            if dist < min_dist:
+                min_dist = dist
+                identity = name
 
         if min_dist > threshold:
-            print(min_dist)
             print("Not in the database.")
         else:
             print("it's " + str(identity) + ", the distance is " + str(min_dist))
