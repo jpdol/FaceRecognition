@@ -79,7 +79,10 @@ while(count<4):
                 img = fa.align(img, gray, face)   
                 # Save the captured image into the datasets folder
                 cv2.imshow('face image', img)
-                ok = int(input("Confirme se a imagem está ok!"))
+                try:
+                    ok = int(input("Confirme se a imagem está ok!"))
+                except:
+                    ok = 0
                 if ok:
                     count += 1
                     #img = cv2.resize(gray[y:y+h,x:x+w], (96, 96))

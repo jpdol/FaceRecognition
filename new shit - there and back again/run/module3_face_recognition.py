@@ -29,7 +29,7 @@ face_detector = dlib.get_frontal_face_detector()
 predictor = dlib.shape_predictor('shape_predictor_68_face_landmarks.dat')
 fa = FaceAligner(predictor, desiredFaceWidth=96)
 
-cam = cv2.VideoCapture(0)
+cam = cv2.VideoCapture(1)
 cam.set(3, 640) # set video width
 cam.set(4, 480) # set video height
 

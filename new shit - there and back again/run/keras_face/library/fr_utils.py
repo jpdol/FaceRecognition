@@ -192,6 +192,7 @@ def load_dataset():
 
 def img_to_encoding(image_path, model):
     img1 = cv2.imread(image_path, 1)
+    img = cv2.cvtColor(img1, cv2.COLOR_BGR2GRAY)
     img = img1[...,::-1]
     img = np.around(np.transpose(img, (2,0,1))/255.0, decimals=12)
     x_train = np.array([img])

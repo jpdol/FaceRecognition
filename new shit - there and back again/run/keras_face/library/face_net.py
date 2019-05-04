@@ -111,7 +111,7 @@ class FaceNet(object):
         """
 
         if threshold is None:
-            threshold = 0.7
+            threshold = 0.6
 
         ## Step 1: Compute the target "encoding" for the image. Use img_to_encoding() see example above. ## (≈ 1 line)
         encoding = img_to_encoding(image_path, self.model)
@@ -123,15 +123,16 @@ class FaceNet(object):
         identity = None
 
         # Loop over the database dictionary's names and encodings.
-        for (name, db_enc) in database.items():
+        for (name, db_encs) in database.items():
 
+            
             # Compute L2 distance between the target "encoding" and the current "emb" from the database. (≈ 1 line)
-            dist = np.linalg.norm(db_enc - encoding)
-
-            # If this distance is less than the min_dist, then set min_dist to dist, and identity to name. (≈ 3 lines)
-            if dist < min_dist:
-                min_dist = dist
-                identity = name
+            for db_enc in db_encs:
+                dist = np.linalg.norm(db_enc - encoding)
+                # If this distance is less than the min_dist, then set min_dist to dist, and identity to name. (≈ 3 lines)
+                if dist < min_dist:
+                    min_dist = dist
+                    identity = name
 
         if min_dist > threshold:
             print("Not in the database.")
