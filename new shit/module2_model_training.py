@@ -41,8 +41,13 @@ data = {}
 y_train = []
 X_train = []
 for i in range(1, len(os.listdir(image_dir_basepath))):
-    for k in range(len(os.listdir(os.path.join(image_dir_basepath, str(i))))):
+    aux = os.path.join(image_dir_basepath, str(i))
+    if '.DS_Store' in aux:
+        os.remove(os.path.join(aux, '.DS_Store'))
+    #print(len(os.listdir(aux)))
+    for k in range(len(os.listdir(aux))):
         y_train.append(i)
+y_train=y_train[:len(y_train)-1]
 for name in names:
     image_dirpath = os.path.join(image_dir_basepath, name)
     image_filepaths = [os.path.join(image_dirpath, f) for f in os.listdir(image_dirpath)]
@@ -54,8 +59,13 @@ data = {}
 y_test = []
 X_test = []
 for i in range(1, len(os.listdir(image_dir_basepath))):
-    for k in range(len(os.listdir(os.path.join(image_dir_basepath, str(i))))):
+    aux = os.path.join(image_dir_basepath, str(i))
+    if '.DS_Store' in aux:
+        os.remove(os.path.join(aux, '.DS_Store'))
+
+    for k in range(len(os.listdir(aux))):
         y_test.append(i)
+y_test=y_test[:len(y_test)-1]
 for name in names:
     image_dirpath = os.path.join(image_dir_basepath, name)
     image_filepaths = [os.path.join(image_dirpath, f) for f in os.listdir(image_dirpath)]
@@ -75,7 +85,7 @@ X_train = scaler.transform(X_train)
 X_test = scaler.transform(X_test)
 
 from sklearn.neighbors import KNeighborsClassifier  
-classifier = KNeighborsClassifier(n_neighbors=5)  
+classifier = KNeighborsClassifier(n_neighbors=1)  
 classifier.fit(X_train, y_train)
 
-joblib.dump(classifier, 'classifier.h5')
+joblib.dump(classifier, 'classifier.sav')

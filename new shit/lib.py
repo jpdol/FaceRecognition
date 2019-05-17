@@ -39,9 +39,12 @@ def load_and_align_images(filepaths, margin):
     image_size = 160
     aligned_images = []
     for filepath in filepaths:
+        if '.DS_Store' in filepath:
+            continue
         img = imread(filepath, cv2.IMREAD_GRAYSCALE)
         b = np.dstack((img, img))
-        img = np.dstack((img, b))      
+        img = np.dstack((img, b))
+        #print(type(img), img.shape, filepath)     
         aligned = resize(img, (image_size, image_size), mode = 'reflect')
         aligned_images.append(aligned)
             

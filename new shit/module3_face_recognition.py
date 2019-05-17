@@ -2,6 +2,8 @@ from keras.models import load_model
 from keras.preprocessing.image import ImageDataGenerator
 import lib
 import joblib
+import numpy as np
+from skimage.transform import resize
 
 classifier = joblib.load('classifier.sav')
 facenet = load_model('facenet_keras.h5')
@@ -15,6 +17,7 @@ names = ['Jean', 'Lorena', 'Diego', 'Hermann', 'Professora']
 import cv2
 import os
 
+image_size = 160
 cam = cv2.VideoCapture(0)
 cam.set(3, 640) # set video width
 cam.set(4, 480) # set video height
@@ -37,16 +40,16 @@ while(True):
         b = np.dstack((img, img))
         img = np.dstack((img, b))      
         aligned = resize(img, (image_size, image_size), mode='reflect')
-        aux = prewhiten(np.array(aligned))
+        aux = lib.prewhiten(np.array(aligned))
         emb = facenet.predict(np.reshape(aux, (1, aux.shape[0], aux.shape[1], aux.shape[2])))
         emb = lib.l2_normalize(np.concatenate(np.array(emb)))
 	
-        y_pred = classifier.kneighbors(emb.reshape(1, -1))[0]
-
-        for i in range(len(y_pred)):
-            for j in range(len(y_pred[i])):
-                if (y_pred[i][j]==min(y_pred[i])):
-                    print(names[j], '-', max(y_pred[i]))
+        y_pred = classifier.kneighbors(emb.reshape(1, -1))
+        print(y_pred)
+        #for i in range(len(y_pred)):
+            #for j in range(len(y_pred[i])):
+                #if (y_pred[i][j]==min(y_pred[i])):
+                    #print(names[j], '-', max(y_pred[i]))
         
 
 cam.release()
